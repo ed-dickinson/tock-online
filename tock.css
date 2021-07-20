@@ -1,0 +1,38 @@
+:root {
+  --colour1: black;
+  --colour2: dodgerblue;
+  --colour3: aqua;
+}
+
+body {
+    /* background-color: var(--colour3); */
+}
+main {
+    font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif;
+}
+
+header {
+    text-align: center;
+}
+
+/* The big four starts are 4x4, the whole thing is 17x17, for 64 play squares overall, and an additional 16 home squares. */
+
+.board-container {
+  margin: auto; width: calc(17 * 31px + 1px); height: calc(17 * 31px + 1px);
+  /* background-color: var(--colour3);  */
+  border: 0px solid black; position: relative;
+}
+
+.start-area {
+  position: absolute;
+  /* background-color: var(--colour2); */
+}
+.start-area:nth-of-type(1) {top: 0; left: 0;}
+.start-area:nth-of-type(2) {top: 0; right: 0;}
+.start-area:nth-of-type(3) {bottom: 0; right: 0;}
+.start-area:nth-of-type(4) {bottom: 0; left: 0;}
+
+.start-area-square {position: absolute;}
+
+.play-square, .home-square {position: absolute;}
+.start-square {background-color: white; }
