@@ -4,6 +4,7 @@ const squareSize = 30;
 const lineSize = 1;
 const placeSize = (squareSize + lineSize); // (squareSize+lineSize)
 
+
 function boardLayoutSetUp() {
   const board = document.querySelector('.board-container');
 
@@ -27,6 +28,17 @@ function boardLayoutSetUp() {
       startAreaSquare.style.top = placeSize * (i==0||i==1 ? 0.5 : 2.5) + 'px';
       startArea.appendChild(startAreaSquare);
     }
+    let startAreaLabel = document.createElement('div');
+    startAreaLabel.classList.add('start-area-label');
+    startAreaLabel.classList.add(rollingClassName);
+    startArea.appendChild(startAreaLabel);
+    let playerHand = document.createElement('div');
+    playerHand.classList.add('player-hand');
+    playerHand.classList.add(rollingClassName);
+    if (i==0) {playerHand.classList.add('user');}
+    i == 0 || i == 3 ? playerHand.style.bottom = 175 : playerHand.style.top = 175;
+    i == 0 || i == 1 ? playerHand.style.left = 50 : playerHand.style.right = 50;
+    board.appendChild(playerHand);
     board.appendChild(startArea);
   }
 

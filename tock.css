@@ -28,25 +28,48 @@ header {
   position: absolute;
   /* background-color: var(--colour2); */
 }
-.start-area:nth-of-type(1) {top: 0; left: 0;}
-.start-area:nth-of-type(2) {top: 0; right: 0;}
-.start-area:nth-of-type(3) {bottom: 0; right: 0;}
-.start-area:nth-of-type(4) {bottom: 0; left: 0;}
+.start-area.player-2 {top: 0; left: 0;}
+.start-area.player-3 {top: 0; right: 0;}
+.start-area.player-4 {bottom: 0; right: 0;}
+.start-area.player-1 {bottom: 0; left: 0;}
+
+.start-area-label {position: absolute; font-size: 0.85em;}
+.start-area-label.player-2 {top: -1em;}
+.start-area-label.player-3 {transform: rotate(0deg);top:;right:0; top: -1em;}
+.start-area-label.player-4 {bottom: -1em; right: 0;}
+.start-area-label.player-1 {bottom: -1em;}
 
 .start-area-square {position: absolute;}
 .start-area-square::after {content:''; position: absolute; width: 8px; height: 1px; background-color: black; transform: rotate(45deg); top: 2px; left: -2px;}
 .start-area-square::before {content:''; width: calc(100% - 5px); height: calc(100% - 5px); border: 1px solid black; border-width: 1px 0 0 1px; top: 5px; left: 5px; position: absolute;}
 
 .play-square, .home-square {position: absolute;}
-.start-square {background-color: white; }
+.start-square {background-color: var(--colour2); background-image: radial-gradient(white, var(--colour2) 150%);}
 
 .center-cards {position: absolute; left: 300px; bottom: 50px; display: inline; width: 35px; height: 200px; z-index: 10;}
-.card {position: absolute; background-image: url('assets/8BitDeck.png'); width: 35px; height:47px; border: 1px solid black; border-radius: 4px;}
+.card {position: relative; background-color: white; background-image: url('assets/8BitDeck.png'); width: 35px; height:47px; border: 1px solid black; border-radius: 4px; left: 0; top: 0;}
+.user .card:hover {border-color: var(--colour2); cursor: pointer;}
 
-.card.hand { left: 30px; bottom: 10px; background-position: -35px 0px; }
+.cards {position: absolute; top: 170px; left: 245px;}
+.cards .card {position: absolute;}
+
+
+
+/*for 8BitDeck.png
+//back is 00, 2 is x-35, 3 is x-70, etc
+//hearts y0, clubs y-47, diamond y-94, spades y-141*/
+.player-hand .card {display: inline-block; margin-right: 2px;}
+
+.card.hand {  background-position: -455px -141px; }
+.card.hidden {background-position: 0px 0px;}
 /* .center-card.blank {position: absolute; background-color: white; width: 35px; height:47px; border: 1px solid black; border-radius: 4px;} */
 
+.counters {position: absolute;} /*TEMP!*/
 .counter {width: 26px; height: 26px; border: 1px solid black;}
 .counter.player1, .counter.player3 {background-color: var(--colour1);}
 .counter.player2, .counter.player2 {background-color: var(--colour4);}
 .counter.player3, .counter.player4 {border-radius: 50%;}
+
+.player-hand {height: 49px; width: 200px; border: 1px solid var(--colour1);  position: absolute; padding: 3; }
+.player-hand.player-1, .player-hand.player-2 {border-image: linear-gradient(to right, var(--colour2), rgba(255,255,255,0)) 1 round;}
+.player-hand.player-3, .player-hand.player-4 {border-image: linear-gradient(to left, var(--colour2), rgba(255,255,255,0)) 1 round; text-align: right;}
