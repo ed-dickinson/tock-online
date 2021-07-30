@@ -38,17 +38,24 @@ header {
 .start-area-label.player-3 {transform: rotate(0deg);top:;right:0; top: -1em;}
 .start-area-label.player-4 {bottom: -1em; right: 0;}
 .start-area-label.player-1 {bottom: -1em;}
+.start-area-label.dealer::after {content:' D';color: var(--colour2); font-weight: 900; font-size: 0.9em; border: 1px solid var(--colour2); padding-right: 2px; margin-left: 2px;}
+.start-area-label.dealer {border: 1px solid var(--colour2); border-width: 0 1px 1px 0; border-radius: 0 0.7em 0.7em 0;}
+.start-area-label.dealer {border: 1px solid var(--colour2); border-width: 0 0 1px 0px; border-radius: 0;}
 
 .start-area-square {position: absolute;}
+/* 3D */
 .start-area-square::after {content:''; position: absolute; width: 8px; height: 1px; background-color: black; transform: rotate(45deg); top: 2px; left: -2px;}
 .start-area-square::before {content:''; width: calc(100% - 5px); height: calc(100% - 5px); border: 1px solid black; border-width: 1px 0 0 1px; top: 5px; left: 5px; position: absolute;}
 
-.play-square, .home-square {position: absolute;}
-.start-square {background-color: var(--colour2); background-image: radial-gradient(white, var(--colour2) 150%);}
+
+.play-square, .home-square {position: absolute; color: rgb(200,200,200);}
+.start-square {background-color: var(--colour2); background-image: radial-gradient(white, var(--colour2) 250%);}
 
 .center-cards {position: absolute; left: 300px; bottom: 50px; display: inline; width: 35px; height: 200px; z-index: 10;}
 .card {position: relative; background-color: white; background-image: url('assets/8BitDeck.png'); width: 35px; height:47px; border: 1px solid black; border-radius: 4px; left: 0; top: 0;}
-.user .card:hover {border-color: var(--colour2); cursor: pointer;}
+.user .card:hover {border-color: var(--colour2); cursor: pointer;
+  /* background-size: auto 800%; */
+}
 
 .cards {position: absolute; top: 170px; left: 245px;}
 .cards .card {position: absolute;}
@@ -64,11 +71,36 @@ header {
 .card.hidden {background-position: 0px 0px;}
 /* .center-card.blank {position: absolute; background-color: white; width: 35px; height:47px; border: 1px solid black; border-radius: 4px;} */
 
+/*1 & 3 are same colour , 1 & 2 are same shape*/
 .counters {position: absolute;} /*TEMP!*/
-.counter {width: 26px; height: 26px; border: 1px solid black;}
-.counter.player1, .counter.player3 {background-color: var(--colour1);}
-.counter.player2, .counter.player2 {background-color: var(--colour4);}
-.counter.player3, .counter.player4 {border-radius: 50%;}
+.counter {width: 20px; height: 20px; z-index: 100;
+  /* border: 1px solid var(--colour2); */
+   /* filter: drop-shadow(5px 5px 0px var(--colour2));  */
+  position: relative;}
+
+.start-area-square .counter {top: 2px; left: 2px;}
+
+.counter svg path.p34fill {fill: var(--colour2); stroke: var(--colour2);}
+.counter svg path.p34stroke {fill: ; stroke: var(--colour4);}
+
+.counter svg path {stroke-width: 1px; }
+
+.counter svg path.p34fill {d: path('M0 0 L20 0 L20 20 L0 20 L0 0 L0 20 L6 26 L26 26 L20 20 L26 26 L26 6 L20 0 Z');}
+.counter svg path.p34stroke {d: path('M20 0 L20 20 L25 25 L20 20 L0 20 L20 20');}
+
+.counter.player-1, .counter.player-3 {background-color: var(--colour2);}
+.counter.player-1 svg path, .counter.player-4 svg path {fill: var(--colour4); stroke: var(--colour2);}
+.counter.player-2 svg path, .counter.player-3 svg path {fill: var(--colour4); stroke: var(--colour2);}
+.counter.player-2 {background-color: var(--colour4); border: 0px solid var(--colour2);}
+.counter.player-4 {background-color: var(--colour4); border: 0px solid var(--colour2);}
+.counter.player-4 svg path {fill: var(--colour2); stroke: var(--colour4);}
+.counter.player-3 {background-color: var(--colour2);}
+.counter.player-3 svg path {fill: var(--colour2); stroke: var(--colour4);}
+.counter svg path.p34fill {fill: var(--colour2); stroke: var(--colour2);}
+.counter svg path.p34stroke {fill: ; stroke: var(--colour4);}
+
+.counter.player-1 svg path, .counter.player-2 svg path {d: path('M0 0 L20 0 L20 20 L0 20 L0 0 L0 20 L6 26 L26 26 L20 20 L26 26 L26 6 L20 0 Z');}
+
 
 .player-hand {height: 49px; width: 200px; border: 1px solid var(--colour1);  position: absolute; padding: 3; }
 .player-hand.player-1, .player-hand.player-2 {border-image: linear-gradient(to right, var(--colour2), rgba(255,255,255,0)) 1 round;}

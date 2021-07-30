@@ -4,6 +4,10 @@ const squareSize = 30;
 const lineSize = 1;
 const placeSize = (squareSize + lineSize); // (squareSize+lineSize)
 
+let squaresDOM = {play : [],
+              start : [[],[],[],[]],
+              home : [[],[],[],[]]};
+
 
 function boardLayoutSetUp() {
   const board = document.querySelector('.board-container');
@@ -16,7 +20,7 @@ function boardLayoutSetUp() {
     startArea.classList.add(rollingClassName);
     startArea.style.width = (squareSize * 4) + (lineSize * 5) + 'px';
     startArea.style.height = (squareSize * 4) + (lineSize * 5) + 'px';
-    for (let i = 0; i < 4; i++) {
+    for (let j = 0; j < 4; j++) {
       let startAreaSquare = document.createElement('div');
       let rollingClassName2 = 'start-area-square-' + (i + 1);
       startAreaSquare.classList.add('start-area-square');
@@ -24,9 +28,10 @@ function boardLayoutSetUp() {
       startAreaSquare.style.width = squareSize + 'px';
       startAreaSquare.style.height = squareSize + 'px';
       startAreaSquare.style.border = lineSize + 'px solid black';
-      startAreaSquare.style.left = placeSize * (i==0||i==3 ? 0.5 : 2.5) + 'px';
-      startAreaSquare.style.top = placeSize * (i==0||i==1 ? 0.5 : 2.5) + 'px';
+      startAreaSquare.style.left = placeSize * (j==0||j==3 ? 0.5 : 2.5) + 'px';
+      startAreaSquare.style.top = placeSize * (j==0||j==1 ? 0.5 : 2.5) + 'px';
       startArea.appendChild(startAreaSquare);
+      squaresDOM.start[i].push(startAreaSquare);
     }
     let startAreaLabel = document.createElement('div');
     startAreaLabel.classList.add('start-area-label');
@@ -43,8 +48,10 @@ function boardLayoutSetUp() {
   }
 
   // main play squares
+  let runningLeftTop = [placeSize * 4, placeSize * 16];
   for (let i = 0; i < 64; i++) {
     const playSquare = document.createElement('div');
+    playSquare.innerHTML = i;
     playSquare.classList.add('play-square');
     if (i == 0 || i == 16 || i == 32 || i == 48) {
       playSquare.classList.add('start-square');
@@ -53,42 +60,20 @@ function boardLayoutSetUp() {
     playSquare.style.height = squareSize + 'px';
     playSquare.style.border = lineSize + 'px solid black';
     let startAreaSize = (squareSize + lineSize) * 4;
-    if (i < 9) {
-      playSquare.style.left = startAreaSize + (i * (squareSize + lineSize)) + 'px';
-    } else if (i < 13) {
-      playSquare.style.left = startAreaSize + (8 * (squareSize + lineSize)) + 'px';
-      playSquare.style.top = 0 + ((i-8) * (squareSize + lineSize)) + 'px';
-    } else if (i < 17) {
-      playSquare.style.left = startAreaSize + ((i-4) * (squareSize + lineSize)) + 'px';
-      playSquare.style.top = 0 + ((4) * (squareSize + lineSize)) + 'px';
-    } else if (i < 25) {
-      playSquare.style.left = startAreaSize + ((12) * (squareSize + lineSize)) + 'px';
-      playSquare.style.top = 0 + ((i-12) * (squareSize + lineSize)) + 'px';
-    } else if (i < 29) {
-      playSquare.style.left = ((40-i) * (squareSize + lineSize)) + 'px';
-      playSquare.style.top = 0 + ((12) * (squareSize + lineSize)) + 'px';
-    } else if (i < 33) {
-      playSquare.style.left = ((12) * (squareSize + lineSize)) + 'px';
-      playSquare.style.top = 0 + ((i - 16) * (squareSize + lineSize)) + 'px';
-    } else if (i < 41) {
-      playSquare.style.left = ((44-i) * (squareSize + lineSize)) + 'px';
-      playSquare.style.top = ((16) * (squareSize + lineSize)) + 'px';
-    } else if (i < 45) {
-      playSquare.style.left = ((4) * (squareSize + lineSize)) + 'px';
-      playSquare.style.top = ((56-i) * (squareSize + lineSize)) + 'px';
-    } else if (i < 49) {
-      playSquare.style.left = ((48-i) * (squareSize + lineSize)) + 'px';
-      playSquare.style.top = ((12) * (squareSize + lineSize)) + 'px';
-    } else if (i < 57) {
-      playSquare.style.left = ((0) * (squareSize + lineSize)) + 'px';
-      playSquare.style.top = ((60-i) * (squareSize + lineSize)) + 'px';
-    } else if (i < 61) {
-      playSquare.style.left = ((i-56) * (squareSize + lineSize)) + 'px';
-      playSquare.style.top = ((4) * (squareSize + lineSize)) + 'px';
-    } else {
-      playSquare.style.left = ((4) * (squareSize + lineSize)) + 'px';
-      playSquare.style.top = ((64-i) * (squareSize + lineSize)) + 'px';
+
+    playSquare.style.left = runningLeftTop[0];
+    playSquare.style.top = runningLeftTop[1];
+    if (i < 4 || (i < 16 && i >= 8) || (i >=20 && i < 24)) {
+      runningLeftTop[1] -= placeSize;
+    } else if (i < 8 || (i>=48 && i<52) || (i>=56 && i<63)) {
+      runningLeftTop[0] -= placeSize;
+    } else if (i < 20 || (i >= 24 && i < 32) || (i >= 36 && i < 40)) {
+      runningLeftTop[0] += placeSize;
+    } else if (i < 36 || (i >=40 && i < 48) || (i>=52 && i<56)) {
+      runningLeftTop[1] += placeSize;
     }
+
+    squaresDOM.play.push(playSquare);
     board.appendChild(playSquare);
   }
 
@@ -105,22 +90,23 @@ function boardLayoutSetUp() {
         homeSquare.style.width = squareSize + 'px';
         homeSquare.style.height = squareSize + 'px';
 
-        if (i==1 || i==3) {
+        if (i==0 || i==2) { //top and bottom
           homeSquare.style.left = 8 * (squareSize + lineSize) + 'px';
-        } else if (i == 0) {
+        } else if (i == 1) { //left
           homeSquare.style.left = ((j+1) * (squareSize + lineSize)) + 'px';
-        } else {
+        } else { //right
           homeSquare.style.left = ((15-j) * (squareSize + lineSize)) + 'px';
         }
-        if (i==0 || i==2) {
+        if (i==1 || i==3) { // left and right
           homeSquare.style.top = 8 * (squareSize + lineSize) + 'px';
-        } else if (i == 1) {
+        } else if (i == 2) { // top
           homeSquare.style.top = ((j+1) * (squareSize + lineSize)) + 'px';
-        } else {
+        } else { // bottom
           homeSquare.style.top = ((15-j) * (squareSize + lineSize)) + 'px';
         }
 
         board.appendChild(homeSquare);
+        squaresDOM.home[i].push(homeSquare);
     }
   }
 }

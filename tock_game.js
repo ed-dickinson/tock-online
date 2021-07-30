@@ -1,29 +1,63 @@
 const pieceSize = 26;
 let dealer = 1;
 
+document.querySelectorAll('.start-area-label')[dealer-1].classList.add('dealer');
 
-const Player = (name, number) => {
+//so the 'boardState' will hold info and the player(hand)/card/piece object FacFuncs will create the elements for each player in their dom
+
+let boardState = {
+  // players : { player1 : '',
+  //           }
+  dealer : 1,
+  deck : [],
+  player1 : { name : "",
+              hand : [],
+              counters : [-14, -13, -12, -11]},
+  player2 : { name : "",
+              hand : [],
+              counters : [-24, -23, -22, -21]},
+  player3 : { name : "",
+              hand : [],
+              counters : [-34, -33, -32, -31]},
+  player4 : { name : "",
+              hand : [],
+              counters : [-44, -43, -42, -41]}
+}
+
+// spaces: 0,1,2,3,4, 5,6,7,8, 9,10,11,12...;
+// p1: 12       p2 28     p3 44       p4 60
+// start: -11,-12,-13,-14     -31,-32 -41,-42
+// home: 112    228       344         460
+
+
+const Player = (name, number, human) => {
   const getName = () => name;
   let hand = [];
   const addToHand = (card) => {
     hand.push(card);
   }
+  const selectCard = (card) => {
+    // if card
+    console.log('card: ' + card.getCard());
+  }
   const cardClick = (card) => {
-    console.log(card);
-    if (event.target.classList.contains('shown')!=true) {
+    // console.log(card);
+    if (event.target.classList.contains('shown') == false) {
       card.showCard(card);
+    } else {
+      selectCard(card);
     }
   }
   const handClickInit = () => {
     hand.forEach(card => {
       card.alias.addEventListener('click', function(event){cardClick(card)}, false);
     });
-    console.log('summin');
   }
 
   return {getName, name, addToHand, hand, handClickInit};
 }
 
+// this just sets up for TESTING
 let players = [];
 for (let i=0; i<4; i++) {
   let playerName = 'Player ' + (i+1);
@@ -33,14 +67,47 @@ for (let i=0; i<4; i++) {
 // console.log(players);
 
 const Piece = (player, number) => {
+  // const create
+  let alias = undefined;
   const move = () => {};
 
-  return {move};
+  return {move, alias};
 }
+
+let pieces = [[],[],[],[]];
+
+for (let i = 0; i < 4; i++) {
+
+  let rollingClassName = 'player-' + (i+1);
+
+  for (let j = 0; j < 4; j++) {
+    let piece = Piece((i+1),j);
+    let alias = document.createElement('div');
+
+    if (i == 2 || i == 3) {
+      alias.innerHTML = '<svg height="30" width="30"><path class="p34fill"></path><path class="p34stroke"></path></svg>';
+    } else { alias.innerHTML = '<svg height="30" width="30"><path></path></svg>';}
+
+    alias.classList.add('counter');
+    alias.classList.add(rollingClassName);
+    piece.alias = alias;
+    pieces[i].push(piece);
+    squaresDOM.start[i][j].appendChild(piece.alias);
+  }
+}
+
+console.log(pieces);
 
 const Space = () => {
 
 }
+
+let squares = { play : [],
+                start : [[],[],[],[]],
+                home : [[],[],[],[]]
+                };
+
+
 
 const Card = (suite, value) => {
   const rank = value == 1 ? 'Ace' : value == 11 ? 'Jack' : value == 12 ? 'Queen' : value == 13 ? 'King' : value;
@@ -59,30 +126,12 @@ const Card = (suite, value) => {
   imageXY[0] = ((value==1?14:value) - 1) * -35;
   const showCard = (card) => {
     card.alias.style.backgroundPosition = imageXY[0] + 'px ' + imageXY[1] + 'px';
+    card.alias.classList.add('shown');
   }
   return {getCard, card, imageXY, alias, showCard};
 }
 
 
-// let deck = [];
-// let suites = ['Hearts', 'Clubs', 'Diamonds', 'Spades'];
-//
-// for (let i=0; i<4; i++) {
-//   for (let j=1; j<14; j++) {
-//     let card = Card(suites[i],j);
-//     deck.push(card);
-//     console.log(card.getCard());
-//   }
-// } console.log(deck.length);
-//
-// const cardsContainer = document.querySelector('.cards');
-//
-// for (let i=0; i < deck.length; i++) {
-//   let card = document.createElement('div');
-//   card.classList.add('card');
-//   card.style.top = (52-i)*2;
-//   cardsContainer.appendChild(card);
-// }
 
 const deck = (() => {
   let suites = ['Hearts', 'Clubs', 'Diamonds', 'Spades'];
@@ -100,13 +149,15 @@ const deck = (() => {
         // cardsContainer.appendChild(alias);
         // console.log(card.getCard());
       }
-    } console.log(stack);
+    }
+    // console.log(stack);
   };
   const shuffle = () => {
     for (let i=0; i<stack.length; i++) {
       let active = stack.pop(); //shift is first, pop is last
       stack.splice((Math.floor(Math.random()*52)+1), 0, active);
-    } console.log(stack);
+    }
+    // console.log(stack);
   }
   const stackUp = () => {
     for (let i=0; i < deck.stack.length; i++) {
@@ -120,12 +171,14 @@ const deck = (() => {
   const deal = () => {
     let playerLooper = 0;
     for (let i = 0; i < (stack.length == 20 ? 20 : 16); i++) {
-      let dealtCard = stack.pop();
-      let dealtAlias = cardsContainer.removeChild(dealtCard.alias);
-      dealtAlias.style.top = 0;
-      players[playerLooper].addToHand(dealtCard); //adds to array
-      playerHands[playerLooper].appendChild(dealtAlias); // adds to dom
-      playerLooper == 3 ? playerLooper = 0 : playerLooper++;
+      // setTimeout(function() {
+        let dealtCard = stack.pop();
+        let dealtAlias = cardsContainer.removeChild(dealtCard.alias);
+        dealtAlias.style.top = 0;
+        players[playerLooper].addToHand(dealtCard); //adds to array
+        playerHands[playerLooper].appendChild(dealtAlias); // adds to dom
+        playerLooper == 3 ? playerLooper = 0 : playerLooper++;
+      // },50 * i);
     }
     dealer = dealer == 4 ? 1 : dealer + 1;
     console.log(players[1].hand);
@@ -143,19 +196,8 @@ deck.init();
 deck.shuffle();
 deck.stackUp();
 
-// for (let i=0; i < deck.stack.length; i++) {
-//   let card = document.createElement('div');
-//   card.classList.add('card');
-//   card.style.top = (52-i)*2; // (52-i)*2 from top or -i*2 from bottom
-//   cardsContainer.appendChild(card);
-// }
 deck.deal();
 
-// console.log(deck.stack[0]);
-// console.log(playerHands)
+console.log(deck.stack);
 
-// console.log(Math.floor(Math.random()*52));
-
-// const test = Card('Diamonds', 15);
-
-// console.log(deck[12].xy + ': ' + deck[12].getCard());
+// console.log(squaresDOM.home[1]);
